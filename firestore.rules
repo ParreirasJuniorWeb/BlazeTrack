@@ -1,0 +1,80 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 🔴 FUNÇÕES AUXILIARES DE SEGURANÇA (DRY PRINCIPLE)
+    
+    // Verifica se a requisição vem de um usuário devidamente autenticado
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Verifica se o usuário autenticado é o dono real do documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Verifica se os campos imutáveis de controle não estão sendo alterados maliciosamente
+    function isNotModifyingImmutables(existingData) {
+      return request.resource.data.userId == existingData.userId 
+          && request.resource.data.createdAt == existingData.createdAt;
+    }
+
+    // ==========================================
+    // 🌍 REGRAS PARA A COLEÇÃO DE USUÁRIOS
+    // ==========================================
+    match /users/{userId} {
+      // Qualquer usuário autenticado pode ler dados de outros perfis (necessário para ver nomes nos comentários)
+      allow read: if isAuthenticated();
+      
+      // Apenas o próprio usuário pode criar ou modificar o seu próprio perfil
+      allow create, update: if isOwner(userId);
+      
+      // Proibido deletar perfis diretamente
+      allow delete: if false;
+    }
+
+    // ==========================================
+    // ⚡ REGRAS PARA A COLEÇÃO DE TAREFAS (TASKS)
+    // ==========================================
+    match /tasks/{taskId} {
+      
+      // 1. LEITURA (get e list)
+      // Um usuário pode ler a tarefa se: for o dono OU se a tarefa for pública
+      allow read: if isAuthenticated() && (
+        isOwner(resource.data.userId) || resource.data.isPublic == true
+      );
+
+      // 2. CRIAÇÃO (create)
+      // O usuário pode criar a tarefa se: estiver logado e se declarar como o dono dela no payload
+      allow create: if isAuthenticated() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.status == 'stopped'
+        && request.resource.data.pomodoroTimeSpent == 0;
+
+      // 3. ATUALIZAÇÃO (update)
+      // Um usuário pode atualizar a tarefa se: 
+      // - Ele for o dono da tarefa (pode mudar tudo exceto os campos imutáveis)
+      // - OU se a tarefa for pública e ele estiver APENAS adicionando um comentário
+      allow update: if isAuthenticated() && (
+        // Caso A: O Dono atualizando sua própria tarefa
+        (isOwner(resource.data.userId) && isNotModifyingImmutables(resource.data))
+        ||
+        // Caso B: Outro usuário adicionando um comentário em uma tarefa pública
+        (
+          resource.data.isPublic == true 
+          && request.resource.data.title == resource.data.title
+          && request.resource.data.description == resource.data.description
+          && request.resource.data.status == resource.data.status
+          && request.resource.data.userId == resource.data.userId
+          && request.resource.data.comments.size() > resource.data.comments.size()
+        )
+      );
+
+      // 4. DELEÇÃO (delete)
+      // Apenas o dono absoluto da tarefa pode excluí-la do banco de dados
+      allow delete: if isAuthenticated() && isOwner(resource.data.userId);
+    }
+  }
+}
