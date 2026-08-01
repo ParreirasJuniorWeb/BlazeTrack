@@ -18,5 +18,5 @@ export const makeStore = () => {
 
 // Tipagens estritas para os Hooks Customizados
 export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<typeof makeStore>['getState'];
+export type RootState = ReturnType<AppStore["getState"]>;
 export type AppDispatch = ReturnType<typeof makeStore>['dispatch'];

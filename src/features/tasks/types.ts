@@ -50,7 +50,7 @@ export const taskFormSchema = z.object({
     description: z.string()
         .min(1, 'A descrição é obrigatória')
         .max(200, 'Descrição longa demais (máximo 200)'),
-    isPublic: z.boolean().default(false),
+    isPublic: z.boolean(),
     deadline: z.string().nullable().optional(),
 });
 
