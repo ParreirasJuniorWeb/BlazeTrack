@@ -30,10 +30,11 @@ export default function TasksPage() {
   }, [dispatch]);
 
   // Configuração das Abas de Filtro
-  const tabs = [
+  const tabs: { id: TaskStatus | "all"; name: string; icon: string }[] = [
     { id: "all", name: "Todas", icon: "📋" },
-    { id: "pending", name: "Em Andamento", icon: "⚡" },
-    { id: "completed", name: "Concluídas", icon: "✅" },
+    { id: "stopped", name: "Paradas", icon: "🔴" },
+    { id: "progress", name: "Em Andamento", icon: "⚡" },
+    { id: "done", name: "Concluídas", icon: "✅" },
   ];
 
   return (
@@ -130,12 +131,18 @@ export default function TasksPage() {
                 <div className="flex items-center justify-between mb-3">
                   <span
                     className={`inline-block text-xs px-2.5 py-1 rounded-full font-medium ${
-                      task.status === "completed"
+                      task.status === "done"
                         ? "bg-emerald-500/10 text-emerald-500"
-                        : "bg-amber-500/10 text-amber-500"
+                        : task.status === "progress"
+                          ? "bg-amber-500/10 text-amber-500"
+                          : "bg-red-500/10 text-red-400"
                     }`}
                   >
-                    {task.status === "completed" ? "Concluída" : "Em Andamento"}
+                    {task.status === "done"
+                      ? "Concluída"
+                      : task.status === "progress"
+                        ? "Em Andamento"
+                        : "Parada"}
                   </span>
 
                   {/* Botão Deletar Invisível por padrão (Aparece no Hover do Card) */}
@@ -150,12 +157,12 @@ export default function TasksPage() {
 
                 {/* Títulos e Descrição */}
                 <h3
-                  className={`text-slate-50 text-lg font-semibold tracking-tight ${task.status === "completed" ? "line-through text-slate-500" : ""}`}
+                  className={`text-slate-50 text-lg font-semibold tracking-tight ${task.status === "done" ? "line-through text-slate-500" : ""}`}
                 >
                   {task.title}
                 </h3>
                 <p
-                  className={`text-slate-400 text-sm mt-1.5 leading-relaxed ${task.status === "completed" ? "text-slate-600" : ""}`}
+                  className={`text-slate-400 text-sm mt-1.5 leading-relaxed ${task.status === "done" ? "text-slate-600" : ""}`}
                 >
                   {task.description}
                 </p>
@@ -172,14 +179,12 @@ export default function TasksPage() {
                   )
                 }
                 className={`mt-5 w-full text-sm py-2 rounded-lg font-semibold transition-colors ${
-                  task.status === "completed"
+                  task.status === "done"
                     ? "bg-slate-800 text-slate-400 hover:bg-slate-700/80 hover:text-slate-200"
                     : "bg-orange-600 text-slate-50 hover:bg-orange-500 shadow-md shadow-orange-600/5"
                 }`}
               >
-                {task.status === "completed"
-                  ? "Refazer Tarefa"
-                  : "Concluir Tarefa"}
+                {task.status === "done" ? "Refazer Tarefa" : "Concluir Tarefa"}
               </button>
             </div>
           ))}
