@@ -56,6 +56,8 @@ cd blazetrack
 npm install
 ```
 
+---
+
 ### 2. Configurar as Variáveis de Ambiente
 Crie um arquivo `.env.local` na raiz do projeto e insira as suas credenciais do console do Firebase:
 ```text
@@ -67,6 +69,8 @@ NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=seu_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=seu_app_id
 ```
 
+---
+
 ### 3. Sincronizar Regras e Índices do Firestore (Firebase CLI)
 ```bash
 npm install -g firebase-tools
@@ -74,8 +78,60 @@ firebase login
 firebase deploy --only firestore
 ```
 
+---
+
 ### 4. Executar o Servidor de Desenvolvimento
 ```bash
 npm run dev
 ```
 Abra [http://localhost:3000](http://localhost:3000) no seu navegador para operar a plataforma.
+
+---
+
+## 🤖 Desenvolvimento Assistido por IA
+
+Durante o desenvolvimento deste projeto utilizei ferramentas de Inteligência Artificial como apoio em atividades específicas, tais como:
+
+- brainstorming de soluções
+- revisão de código
+- geração de testes
+- documentação
+- sugestões de refatoração
+
+Toda a arquitetura da aplicação, definição das regras de negócio, integração entre serviços, revisão do código e validação dos resultados foram realizadas por mim.
+
+A IA foi utilizada como ferramenta de produtividade, e não como substituta das decisões de engenharia.
+
+---
+
+## 📝 Licença
+
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+---
+
+## 📧 Contato & Suporte
+
+- **Autor:** [ParreirasJuniorWeb](https://github.com/ParreirasJuniorWeb)
+- **Issues:** [GitHub Issues](https://github.com/ParreirasJuniorWeb/PetHub/issues)
+- **Repositório:** [github.com/ParreirasJuniorWeb/PetHub](https://github.com/ParreirasJuniorWeb/PetHub)
+
+---
+
+## 🙏 Agradecimentos
+
+- [React](https://react.dev/) - Pela excelente biblioteca
+- [Tailwind CSS](https://tailwindcss.com/) - Pelo framework CSS moderno
+- [Firebase](https://firebase.google.com/) - Pela plataforma de backend completa
+- [TypeScript](https://www.typescriptlang.org/) - Pela segurança de tipos
+- [Vite](https://vitejs.dev/) - Pelo excelente build tool
+
+---
+
+<div align="center">
+
+**Desenvolvido com ❤️ para a comunidade Pet Shop** 🐾
+
+⭐ Se este projeto foi útil, considere dar uma estrela! ⭐
+
+</div>
