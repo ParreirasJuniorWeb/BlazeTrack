@@ -109,7 +109,11 @@ export default function StoreProvider({
     return () => unsubscribe();
   }, []);
 
-  if(isPending) return <Loading isLoading={isPending} />;
+  if(isPending) return (
+    <div className="px-50 mx-auto py-50">
+      <Loading isLoading={isPending} />
+    </div>
+  );
 
   return <Provider store={store}>{children}</Provider>;
 }

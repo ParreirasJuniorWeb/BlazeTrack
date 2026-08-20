@@ -11,7 +11,7 @@ export default function Loading({ isLoading }: { isLoading: boolean }) {
 
     const interval = setInterval(() => {
       setPercent((prevPercent) => {
-        const newPercent = Math.min(prevPercent + Math.random() * 30, 90);
+        const newPercent = Math.floor(Math.min(prevPercent + Math.random() * 30, 90));
         return newPercent;
       });
     }, 500);
